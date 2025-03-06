@@ -81,6 +81,7 @@ enum input_method {
 enum output_method {
     OUTPUT_NCURSES,
     OUTPUT_NONCURSES,
+    OUTPUT_BCIRCLE,
     OUTPUT_RAW,
     OUTPUT_SDL,
     OUTPUT_SDL_GLSL,

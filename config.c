@@ -264,6 +264,10 @@ bool validate_config(struct config_params *p, struct error_s *error) {
         p->output = OUTPUT_NONCURSES;
         p->bgcol = 0;
     }
+    if (strcmp(outputMethod, "bcircle") == 0) {
+        p->output = OUTPUT_BCIRCLE;
+        p->bgcol = 0;
+    }
     if (strcmp(outputMethod, "noritake") == 0) {
         p->output = OUTPUT_NORITAKE;
         p->raw_format = FORMAT_NTK3000; // only format supported now
@@ -301,7 +305,7 @@ bool validate_config(struct config_params *p, struct error_s *error) {
     }
     if (p->output == OUTPUT_NOT_SUPORTED) {
 
-        char supportedOutput[1024] = "'noncurses', 'raw', 'noritake'";
+        char supportedOutput[1024] = "'noncurses', 'bcircle', 'raw', 'noritake'";
 
 #ifdef NCURSES
         strcat(supportedOutput, ", 'ncurses'");

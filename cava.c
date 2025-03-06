@@ -138,6 +138,8 @@ void cleanup(void) {
 #endif
     } else if (output_mode == OUTPUT_NONCURSES) {
         cleanup_terminal_noncurses();
+    } else if (output_mode == OUTPUT_BCIRCLE) {
+        cleanup_terminal_bcircle();
     } else if (output_mode == OUTPUT_SDL) {
 #ifdef SDL
         cleanup_sdl();
@@ -332,7 +334,7 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
 
         output_mode = p.output;
 #ifndef _WIN32
-        if (output_mode == OUTPUT_NCURSES || output_mode == OUTPUT_NONCURSES) {
+        if (output_mode == OUTPUT_NCURSES || output_mode == OUTPUT_NONCURSES || output_mode == OUTPUT_BCIRCLE) {
             // Check if we're running in a tty
             if (strncmp(ttyname(0), "/dev/tty", 8) == 0 || strcmp(ttyname(0), "/dev/console") == 0)
                 inAtty = 1;
@@ -631,6 +633,15 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
                 init_terminal_noncurses(inAtty, p.color, p.bcolor, p.col, p.bgcol, p.gradient,
                                         p.gradient_count, p.gradient_colors, width, lines,
                                         p.bar_width, p.orientation);
+                height = lines * 8;
+                break;
+            case OUTPUT_BCIRCLE:
+                get_terminal_dim_bcircle(&width, &lines);
+
+                if (p.xaxis != NONE)
+                    lines--;
+
+                init_terminal_bcircle(p.col, p.bgcol);
                 height = lines * 8;
                 break;
             case OUTPUT_RAW:
@@ -1213,6 +1224,9 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
                                                      previous_frame, p.gradient, x_axis_info,
                                                      p.orientation, 0);
                     }
+                    break;
+                case OUTPUT_BCIRCLE:
+                    rc = draw_terminal_bcircle(inAtty, lines, width, bars);
                     break;
                 case OUTPUT_NCURSES:
 #ifdef NCURSES
